@@ -7,8 +7,19 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Grid from '@material-ui/core/Grid';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
+  root: {
+    flexGrow: 1,
+  },
+  formControl: {
+    margin: theme.spacing(2),
+  },
   table: {
     minWidth: 650,
   },
@@ -16,7 +27,7 @@ const useStyles = makeStyles({
     color: '#fff',
     fontWeight: 'bold'
   }
-});
+}));
 
 function createData(partNo, description, inventory, forecast, reorderQty, supplier) {
   return { partNo, description, inventory, forecast, reorderQty, supplier };
@@ -32,34 +43,69 @@ const rows = [
 
 function Home() {
   const classes = useStyles();
+  const [strategy, setStrategy] = React.useState('cheapestPrice');
+
+  const inputLabel = React.useRef(null);
+  const [labelWidth, setLabelWidth] = React.useState(0);
+  React.useEffect(() => {
+    setLabelWidth(inputLabel.current.offsetWidth);
+  }, []);
+
+  const handleChange = event => {
+    setStrategy(event.target.value);
+  };
 
   return (
-    <TableContainer component={Paper}>
-      <Table className={classes.table} aria-label="simple table">
-        <TableHead style={{ backgroundColor: '#99ccee' }}>
-          <TableRow>
-            <TableCell className={classes.th}>Part No.</TableCell>
-            <TableCell className={classes.th}>Description</TableCell>
-            <TableCell className={classes.th} align="right">Inventory</TableCell>
-            <TableCell className={classes.th} align="right">Forecast</TableCell>
-            <TableCell className={classes.th} align="right">Re-Order Quantity</TableCell>
-            <TableCell className={classes.th}>Supplier</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {rows.map(row => (
-            <TableRow key={row.name}>
-              <TableCell>{row.partNo}</TableCell>
-              <TableCell>{row.description}</TableCell>
-              <TableCell align="right">{row.inventory}</TableCell>
-              <TableCell align="right">{row.forecast}</TableCell>
-              <TableCell align="right">{row.reorderQty}</TableCell>
-              <TableCell>{row.supplier}</TableCell>
+    <div className={classes.root}>
+      <Grid container>
+        <Grid item xs={6}>
+          <FormControl variant="outlined" fullWidth className={classes.formControl} margin="dense">
+            <InputLabel ref={inputLabel} id="demo-simple-select-outlined-label">
+              Supplier Strategy
+            </InputLabel>
+            <Select
+              labelId="demo-simple-select-outlined-label"
+              id="demo-simple-select-outlined"
+              value={strategy}
+              onChange={handleChange}
+              labelWidth={labelWidth}
+            >
+              <MenuItem value="cheapestPrice">Cheapest Price</MenuItem>
+              <MenuItem value="timeFulfillment">Time for fulfillment</MenuItem>
+              <MenuItem value="quality">Quality of goods</MenuItem>
+            </Select>
+          </FormControl>
+        </Grid>
+        <Grid item xs={6}>
+        </Grid>
+      </Grid>
+      <TableContainer component={Paper}>
+        <Table className={classes.table} aria-label="simple table">
+          <TableHead style={{ backgroundColor: '#99ccee' }}>
+            <TableRow>
+              <TableCell className={classes.th}>Part No.</TableCell>
+              <TableCell className={classes.th}>Description</TableCell>
+              <TableCell className={classes.th} align="right">Inventory</TableCell>
+              <TableCell className={classes.th} align="right">Forecast</TableCell>
+              <TableCell className={classes.th} align="right">Re-Order Quantity</TableCell>
+              <TableCell className={classes.th}>Suggested Supplier</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {rows.map(row => (
+              <TableRow key={row.partNo}>
+                <TableCell>{row.partNo}</TableCell>
+                <TableCell>{row.description}</TableCell>
+                <TableCell align="right">{row.inventory}</TableCell>
+                <TableCell align="right">{row.forecast}</TableCell>
+                <TableCell align="right">{row.reorderQty}</TableCell>
+                <TableCell>{row.supplier}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </div>
   );
 }
 

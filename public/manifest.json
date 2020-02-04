@@ -1,6 +1,7 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "SMRT Buyer",
+  "name": "SMRT Buyer",
+  "version": "1.0.0",
   "icons": [
     {
       "src": "favicon.ico",
@@ -21,5 +22,12 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "fullpage": true,
+  "size": {
+    "width": 6,
+    "height": 3
+  },
+  "mapping": [],
+  "id": "cc748449-71d2-496b-80cf-dd9271179a0f"
 }
